@@ -27,7 +27,7 @@ import com.google.ads.mediation.admob.AdMobAdapterExtras;
 public class AdMobPlugin extends CordovaPlugin {
     /** The adView to display to the user. */
     private DfpAdView adView;
-    private DfpInterstitialAd intertitial;
+    private DfpInterstitialAd interstitial;
 
     /** Whether or not the ad should be positioned at top or bottom of screen. */
     private boolean positionAtTop;
@@ -163,8 +163,8 @@ public class AdMobPlugin extends CordovaPlugin {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                intertitial = new DfpInterstitialAd(cordova.getActivity(), publisherId);
-                intertitial.setAdListener(new BannerListener());
+                interstitial = new DfpInterstitialAd(cordova.getActivity(), publisherId);
+                interstitial.setAdListener(new BannerListener());
                 // Notify the plugin.
                 callbackContext.success();
             }
@@ -199,23 +199,23 @@ public class AdMobPlugin extends CordovaPlugin {
         // Request an ad on the UI thread.
         if (adView != null) {
             requestAd(isTesting, inputExtras, callbackContext);
-        } else if (intertitial != null) {
-            requestIntertitial(isTesting, inputExtras, callbackContext);
+        } else if (interstitial != null) {
+            requestInterstitial(isTesting, inputExtras, callbackContext);
         } else {
-            callbackContext.error("adView && intertitial are null. Did you call createBannerView?");
+            callbackContext.error("adView && interstitial are null. Did you call createBannerView?");
             return;
         }
     }
 
-    private synchronized void requestIntertitial(final boolean isTesting, final JSONObject inputExtras, final CallbackContext callbackContext) {
-        Log.w(LOGTAG, "requestIntertitial");
+    private synchronized void requestInterstitial(final boolean isTesting, final JSONObject inputExtras, final CallbackContext callbackContext) {
+        Log.w(LOGTAG, "requestInterstitial");
         // Create the AdView on the UI thread.
         Runnable runnable = new Runnable() {
             @Override
             @SuppressWarnings("unchecked")
             public void run() {
-                if (intertitial == null) {
-                    callbackContext.error("intertitial is null. Did you call createBannerView?");
+                if (interstitial == null) {
+                    callbackContext.error("interstitial is null. Did you call createBannerView?");
                     return;
                 } else {
                     AdRequest request = new AdRequest();
@@ -248,7 +248,7 @@ public class AdMobPlugin extends CordovaPlugin {
                     if (inputValid) {
                         // extras.addExtra("cordova", 1);
                         // request.setNetworkExtras(extras);
-                        intertitial.loadAd(request);
+                        interstitial.loadAd(request);
                         // Notify the plugin.
                         callbackContext.success();
                     }
@@ -339,8 +339,8 @@ public class AdMobPlugin extends CordovaPlugin {
 
         @Override
         public void onReceiveAd(Ad ad) {
-            if (ad == intertitial) {
-                intertitial.show();
+            if (ad == interstitial) {
+                interstitial.show();
             }
             webView.loadUrl("javascript:cordova.fireDocumentEvent('onReceiveAd');");
         }
