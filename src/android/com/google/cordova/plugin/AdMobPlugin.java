@@ -180,9 +180,6 @@ public class AdMobPlugin extends CordovaPlugin {
      * @return A PluginResult representing whether or not an ad was requested succcessfully. Listen for onReceiveAd() and onFailedToReceiveAd() callbacks to see if an ad was successfully retrieved.
      */
     private void executeRequestAd(JSONArray inputs, CallbackContext callbackContext) {
-        callbackContext.error("executeRequestAd");
-        callbackContext.error("executeRequestAd 2");
-        
         boolean isTesting = false;
         JSONObject inputExtras = null;
 
@@ -192,7 +189,6 @@ public class AdMobPlugin extends CordovaPlugin {
             isTesting = data.getBoolean("isTesting");
             inputExtras = data.getJSONObject("extras");
             Log.w(LOGTAG, "executeRequestAd OK");
-            callbackContext.error("executeRequestAd OK");
             // callbackContext.success();
             // return true;
         } catch (JSONException exception) {
@@ -202,10 +198,8 @@ public class AdMobPlugin extends CordovaPlugin {
 
         // Request an ad on the UI thread.
         if (adView != null) {
-            callbackContext.error("call requestAd");
             requestAd(isTesting, inputExtras, callbackContext);
         } else if (interstitial != null) {
-            callbackContext.error("call requestInterstitial");
             requestInterstitial(isTesting, inputExtras, callbackContext);
         } else {
             callbackContext.error("adView && interstitial are null. Did you call createBannerView?");
@@ -215,8 +209,6 @@ public class AdMobPlugin extends CordovaPlugin {
 
     private synchronized void requestInterstitial(final boolean isTesting, final JSONObject inputExtras, final CallbackContext callbackContext) {
         Log.w(LOGTAG, "requestInterstitial");
-        callbackContext.error("inside requestInterstitial");
-        
         // Create the AdView on the UI thread.
         Runnable runnable = new Runnable() {
             @Override
@@ -226,8 +218,6 @@ public class AdMobPlugin extends CordovaPlugin {
                     callbackContext.error("interstitial is null. Did you call createBannerView?");
                     return;
                 } else {
-                    callbackContext.error("new adrequest");
-                    
                     AdRequest request = new AdRequest();
                     if (isTesting) {
                         // This will request test ads on the emulator only. You
@@ -245,8 +235,6 @@ public class AdMobPlugin extends CordovaPlugin {
                     AdMobAdapterExtras extras = new AdMobAdapterExtras();
                     Iterator<String> extrasIterator = inputExtras.keys();
                     boolean inputValid = true;
-                    
-                    callbackContext.error("apply extras");
                     while (extrasIterator.hasNext()) {
                         String key = extrasIterator.next();
                         try {
@@ -258,11 +246,8 @@ public class AdMobPlugin extends CordovaPlugin {
                         }
                     }
                     if (inputValid) {
-                        callbackContext.error("input valid");
-                        
-                        extras.addExtra("cordova", 1);
-                        request.setNetworkExtras(extras);
-                        callbackContext.error("call loadad");
+                        // extras.addExtra("cordova", 1);
+                        // request.setNetworkExtras(extras);
                         interstitial.loadAd(request);
                         // Notify the plugin.
                         callbackContext.success();
@@ -271,13 +256,10 @@ public class AdMobPlugin extends CordovaPlugin {
             }
         };
         cordova.getActivity().runOnUiThread(runnable);
-        callbackContext.error("runOnUiThread");
     }
 
     private synchronized void requestAd(final boolean isTesting, final JSONObject inputExtras, final CallbackContext callbackContext) {
         Log.w(LOGTAG, "requestAd");
-        callbackContext.error("requestAd");
-        
         // Create the AdView on the UI thread.
         Runnable runnable = new Runnable() {
             @Override
@@ -304,8 +286,6 @@ public class AdMobPlugin extends CordovaPlugin {
                     AdMobAdapterExtras extras = new AdMobAdapterExtras();
                     Iterator<String> extrasIterator = inputExtras.keys();
                     boolean inputValid = true;
-                    
-                    callbackContext.error("applying extras");
                     while (extrasIterator.hasNext()) {
                         String key = extrasIterator.next();
                         try {
@@ -317,11 +297,9 @@ public class AdMobPlugin extends CordovaPlugin {
                         }
                     }
                     if (inputValid) {
-                        callbackContext.error("input valid");
-                        extras.addExtra("cordova", 1);
-                        request.setNetworkExtras(extras);
+                        // extras.addExtra("cordova", 1);
+                        // request.setNetworkExtras(extras);
                         adView.loadAd(request);
-                        callbackContext.error("load request made");
                         // Notify the plugin.
                         callbackContext.success();
                     }
@@ -329,7 +307,6 @@ public class AdMobPlugin extends CordovaPlugin {
             }
         };
         cordova.getActivity().runOnUiThread(runnable);
-        callbackContext.error("runonuithread");
     }
 
     private void executeKillAd(final CallbackContext callbackContext) {
