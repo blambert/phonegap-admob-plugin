@@ -181,6 +181,7 @@ public class AdMobPlugin extends CordovaPlugin {
      */
     private void executeRequestAd(JSONArray inputs, CallbackContext callbackContext) {
         callbackContext.error("executeRequestAd");
+        callbackContext.error("executeRequestAd 2");
         
         boolean isTesting = false;
         JSONObject inputExtras = null;
